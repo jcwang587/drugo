@@ -67,7 +67,7 @@ def create_dashapp(server):
             data=data,
             style_table={'overflowX': 'auto'},
             style_cell={'textAlign': 'left'},
-            page_size=10  # Adjust the number of rows per page as needed
+            page_size=20  
         )
         
         return table
