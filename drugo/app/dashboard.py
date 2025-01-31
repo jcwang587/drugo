@@ -14,10 +14,10 @@ def create_dashapp(server):
 
     # App layout
     app.layout = dbc.Container([
-        html.H1('Dashboard Title', className='text-center my-4'),  # Add a title at the top
+        html.H1('Drug Oxidation Database', className='text-center my-3'), 
         dbc.Row([
             dbc.Col([
-                html.H2('Controls', className='text-center'),
+                html.H2('Tables', className='text-center'),
                 html.Hr(),
                 dcc.RadioItems(
                     options=[
@@ -61,12 +61,34 @@ def create_dashapp(server):
         # Convert query results to a list of dictionaries
         data = [{column.name: getattr(row, column.name) for column in model_class.__table__.columns} for row in query]
         
+        # Define column widths for each table
+        column_widths = {
+            'drugs': {'name': '200px', 'type': '150px', 'description': '300px'},
+            'molecules': {'name': '250px', 'formula': '200px', 'weight': '150px'},
+            'references': {'title': '300px', 'author': '200px', 'year': '100px'}
+        }
+
+        # Get the column widths for the selected table
+        widths = column_widths.get(table_chosen, {})
+
         # Create a Dash DataTable
         table = dash_table.DataTable(
             columns=[{"name": i, "id": i} for i in data[0].keys()],
             data=data,
-            style_table={'overflowX': 'auto'},
+            style_table={'overflowX': 'hidden'},  # Hide horizontal scrollbar
             style_cell={'textAlign': 'left'},
+            style_data_conditional=[
+                {
+                    'if': {'column_id': column_id},
+                    'minWidth': width,
+                    'maxWidth': width,
+                    'width': width
+                } for column_id, width in widths.items()
+            ],
+            style_header={
+                'backgroundColor': 'rgb(230, 230, 230)',
+                'fontWeight': 'bold'
+            },
             page_size=20  
         )
         
