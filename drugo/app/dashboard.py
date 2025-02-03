@@ -10,13 +10,23 @@ def create_dashapp(server):
     # Initialize the app with a Bootstrap theme
     app = Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+    with app.server.app_context():
+        drug_options = [
+            {
+                "label": (drug.drug_title[:15] + '...') if len(drug.drug_title) > 10 else drug.drug_title,
+                "value": drug.drug_id,
+                "title": drug.drug_title
+            }
+            for drug in db.session.query(Drugs).all()
+        ]
+
     # App layout
     app.layout = dbc.Container(
         [
             html.H1(
                 "Drug Oxidation Database",
                 className="text-center my-3",
-                style={"fontSize": "32px"},
+                style={"fontSize": "28px"},
             ),
             dbc.Row(
                 [
@@ -25,7 +35,7 @@ def create_dashapp(server):
                             html.H2(
                                 "Tables",
                                 className="text-center",
-                                style={"fontSize": "24px"},
+                                style={"fontSize": "20px"},
                             ),
                             html.Hr(),
                             dcc.RadioItems(
@@ -37,6 +47,19 @@ def create_dashapp(server):
                                 value="drugs",
                                 id="controls",
                                 inline=False,
+                            ),
+                            html.Br(),
+                            html.Br(),
+                            html.H2(
+                                "Molecular View",
+                                className="text-center",
+                                style={"fontSize": "20px"},
+                            ),
+                            html.Hr(),
+                            dcc.Dropdown(
+                                id="dropdown",
+                                options=drug_options,
+                                value=None,
                             ),
                         ],
                         width=2,
@@ -63,7 +86,7 @@ def create_dashapp(server):
         if model_class is None:
             return html.Div(
                 "No data available"
-            )  # Return a message if no valid model is found
+            )
 
         # Query the selected table
         query = db.session.query(model_class).all()
@@ -82,6 +105,7 @@ def create_dashapp(server):
             "drugs": {"drug_id": "150px", "drug_title": "400px", "smiles": "1600px"},
             "molecules": {
                 "drug_id": "150px",
+                "drug_title": "150px",
                 "som": "150px",
                 "som_element": "150px",
                 "som_level": "150px",
@@ -129,7 +153,7 @@ def create_dashapp(server):
                 "backgroundColor": "rgb(230, 230, 230)",
                 "fontWeight": "bold",
             },
-            page_size=18,
+            page_size=15,
             page_current=0,
             page_action="native",
         )
