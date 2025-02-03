@@ -13,7 +13,7 @@ def create_dashapp(server):
     with app.server.app_context():
         drug_options = [
             {
-                "label": (drug.drug_title[:15] + '...') if len(drug.drug_title) > 10 else drug.drug_title,
+                "label": (drug.drug_title[:20] + '...') if len(drug.drug_title) > 20 else drug.drug_title,
                 "value": drug.drug_id,
                 "title": drug.drug_title
             }
@@ -49,6 +49,16 @@ def create_dashapp(server):
                                 inline=False,
                             ),
                             html.Br(),
+                            html.Label("Items per page:"),
+                            dcc.Dropdown(
+                                id="items-per-page-dropdown",
+                                options=[
+                                    {"label": str(i), "value": i} for i in [5, 10, 15, 20, 25, 50]
+                                ],
+                                value=15,  # Default value
+                                clearable=False,
+                            ),
+                            html.Br(),
                             html.Br(),
                             html.H2(
                                 "Molecular View",
@@ -61,6 +71,7 @@ def create_dashapp(server):
                                 options=drug_options,
                                 value=None,
                             ),
+                            html.Br(),
                         ],
                         width=2,
                         className="bg-light p-3",
@@ -75,8 +86,10 @@ def create_dashapp(server):
     @app.callback(
         Output(component_id="first-graph", component_property="children"),
         Input(component_id="controls", component_property="value"),
+        Input(component_id="items-per-page-dropdown", component_property="value"),
     )
-    def update_table(table_chosen):
+    
+    def update_table(table_chosen, items_per_page):
         # Map the chosen value to the actual model class
         table_map = {"drugs": Drugs, "molecules": Molecules, "references": References}
 
@@ -153,7 +166,7 @@ def create_dashapp(server):
                 "backgroundColor": "rgb(230, 230, 230)",
                 "fontWeight": "bold",
             },
-            page_size=15,
+            page_size=items_per_page,
             page_current=0,
             page_action="native",
         )
