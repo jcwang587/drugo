@@ -13,9 +13,13 @@ def create_dashapp(server):
     with app.server.app_context():
         drug_options = [
             {
-                "label": (drug.drug_title[:20] + '...') if len(drug.drug_title) > 20 else drug.drug_title,
+                "label": (
+                    (drug.drug_title[:20] + "...")
+                    if len(drug.drug_title) > 20
+                    else drug.drug_title
+                ),
                 "value": drug.drug_id,
-                "title": drug.drug_title
+                "title": drug.drug_title,
             }
             for drug in db.session.query(Drugs).all()
         ]
@@ -49,14 +53,25 @@ def create_dashapp(server):
                                 inline=False,
                             ),
                             html.Br(),
-                            html.Label("Items per page:"),
-                            dcc.Dropdown(
-                                id="items-per-page-dropdown",
-                                options=[
-                                    {"label": str(i), "value": i} for i in [5, 10, 15, 20, 25, 50]
+                            dbc.Row(
+                                [
+                                    dbc.Col(
+                                        html.Label("Items per page:"), width="auto"
+                                    ),
+                                    dbc.Col(
+                                        dcc.Dropdown(
+                                            id="items-per-page-dropdown",
+                                            options=[
+                                                {"label": str(i), "value": i}
+                                                for i in [10, 15, 25, 50, 100]
+                                            ],
+                                            value=15,  # Default value
+                                            clearable=False,
+                                        ),
+                                        width=True,
+                                    ),
                                 ],
-                                value=15,  # Default value
-                                clearable=False,
+                                align="center",
                             ),
                             html.Br(),
                             html.Br(),
@@ -87,9 +102,21 @@ def create_dashapp(server):
         Output(component_id="first-graph", component_property="children"),
         Input(component_id="controls", component_property="value"),
         Input(component_id="items-per-page-dropdown", component_property="value"),
+        Input(component_id="dropdown", component_property="value"),
     )
     
-    def update_table(table_chosen, items_per_page):
+    def update_table(table_chosen, items_per_page, selected_molecule):
+        # Check if a molecule is selected and the table chosen is not "molecules"
+        if selected_molecule is not None:
+            if table_chosen == "drugs":
+                pass
+            elif table_chosen == "molecules":
+                pass
+            elif table_chosen == "references":
+                pass
+            else:
+                return html.Div()
+
         # Map the chosen value to the actual model class
         table_map = {"drugs": Drugs, "molecules": Molecules, "references": References}
 
@@ -97,9 +124,7 @@ def create_dashapp(server):
         model_class = table_map.get(table_chosen)
 
         if model_class is None:
-            return html.Div(
-                "No data available"
-            )
+            return html.Div("No data available")
 
         # Query the selected table
         query = db.session.query(model_class).all()
