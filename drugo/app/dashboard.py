@@ -231,6 +231,7 @@ def create_dashapp(server):
 
         table_map = {"drugs": Drugs, "molecules": Molecules, "references": References}
         model_class = table_map.get(table_chosen)
+        
         if model_class is None:
             return html.Div("No data available"), selected_molecule
 
@@ -268,6 +269,7 @@ def create_dashapp(server):
             "reference": "reference",
             "doi": "doi",
         }
+
 
         # If the table is molecules or references, remove the "id" column
         if data:
