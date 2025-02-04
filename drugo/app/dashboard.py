@@ -7,11 +7,11 @@ from .models import Drugs, Molecules, References
 
 
 def create_dashapp(server):
-    # Initialize the app with a Bootstrap theme
+    # Initialize the app with a dark Bootstrap theme
     app = Dash(
         __name__,
         server=server,
-        external_stylesheets=[dbc.themes.BOOTSTRAP],
+        external_stylesheets=[dbc.themes.DARKLY],
         title="Drug Oxidation Database",
     )
 
@@ -32,31 +32,65 @@ def create_dashapp(server):
     # App layout
     app.layout = dbc.Container(
         [
-            html.H1(
-                "Drug Oxidation Database",
-                className="text-center my-3",
-                style={
-                    "fontSize": "24px",
-                    "fontWeight": "bold",
-                    "color": "#343a40",
-                    "fontFamily": "Roboto, sans-serif",
-                },
+            dbc.Navbar(
+                dbc.Container(
+                    [
+                        dbc.NavbarBrand("Drug Oxidation Database", className="ms-2"),
+                        dbc.Nav(
+                            [
+                                dbc.NavItem(dbc.NavLink("Home", href="#")),
+                                dbc.NavItem(dbc.NavLink("About", href="#")),
+                            ],
+                            className="ms-auto",
+                        ),
+                    ],
+                    fluid=True,
+                ),
+                color="dark",
+                dark=True,
             ),
             dbc.Row(
                 [
                     dbc.Col(
                         [
+                            dbc.Tabs(
+                                [
+                                    dbc.Tab(label="Tables", tab_id="tab-tables"),
+                                    dbc.Tab(label="Molecular View", tab_id="tab-molecular"),
+                                ],
+                                id="tabs",
+                                active_tab="tab-tables",
+                            ),
+                            html.Div(id="tab-content"),
+                        ],
+                        width=12,
+                    ),
+                ]
+            ),
+        ],
+        fluid=True,
+    )
+
+    @app.callback(
+        Output("tab-content", "children"),
+        Input("tabs", "active_tab"),
+    )
+    def render_tab_content(active_tab):
+        if active_tab == "tab-tables":
+            return dbc.Row(
+                [
+                    dbc.Col(
+                        [
                             html.H2(
-                                "Tables",
-                                className="text-center",
+                                "Available Tables",
+                                className="text-left",
                                 style={
-                                    "fontSize": "20px",
+                                    "fontSize": "16px",
                                     "fontWeight": "bold",
                                     "color": "#343a40",
                                     "fontFamily": "Roboto, sans-serif",
                                 },
                             ),
-                            html.Hr(),
                             dcc.RadioItems(
                                 options=[
                                     {"label": " Drugs", "value": "drugs"},
@@ -74,7 +108,12 @@ def create_dashapp(server):
                                     dbc.Col(
                                         html.Label(
                                             "Items per page",
-                                            style={"fontFamily": "Roboto, sans-serif"},
+                                            style={
+                                                "fontFamily": "Roboto, sans-serif",
+                                                "fontSize": "16px",
+                                                "fontWeight": "bold",
+                                                "color": "#343a40",
+                                            },
                                         ),
                                         width="auto",
                                     ),
@@ -90,6 +129,7 @@ def create_dashapp(server):
                                             style={
                                                 "fontFamily": "Roboto, sans-serif",
                                                 "fontSize": "14px",
+                                                "color": "#343a40",
                                             },
                                         ),
                                         width=True,
@@ -97,18 +137,7 @@ def create_dashapp(server):
                                 ],
                                 align="center",
                             ),
-                            html.Br(),
-                            html.Br(),
-                            html.H2(
-                                "Molecular View",
-                                className="text-center",
-                                style={
-                                    "fontSize": "20px",
-                                    "fontWeight": "bold",
-                                    "color": "#343a40",
-                                    "fontFamily": "Roboto, sans-serif",
-                                },
-                            ),
+
                             html.Hr(),
                             dcc.Dropdown(
                                 id="dropdown",
@@ -117,6 +146,7 @@ def create_dashapp(server):
                                 style={
                                     "fontFamily": "Roboto, sans-serif",
                                     "fontSize": "14px",
+                                    "color": "#343a40",  # Darker font color for dropdown text
                                 },
                             ),
                             html.Br(),
@@ -126,10 +156,52 @@ def create_dashapp(server):
                     ),
                     dbc.Col([html.Div(id="first-graph")], width=10),
                 ]
-            ),
-        ],
-        fluid=True,
-    )
+            )
+        elif active_tab == "tab-molecular":
+            return dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.H2(
+                                "Molecular Controls",
+                                className="text-left",
+                                style={
+                                    "fontSize": "16px",
+                                    "fontWeight": "bold",
+                                    "color": "#343a40",
+                                    "fontFamily": "Roboto, sans-serif",
+                                },
+                            ),
+                            dcc.Dropdown(
+                                id="molecular-dropdown",
+                                options=[
+                                    {"label": "Option 1", "value": "option1"},
+                                    {"label": "Option 2", "value": "option2"},
+                                ],
+                                value="option1",
+                                style={
+                                    "fontFamily": "Roboto, sans-serif",
+                                    "fontSize": "14px",
+                                    "color": "#343a40",
+                                },
+                            ),
+                            html.Br(),
+                            dbc.Button(
+                                "Apply",
+                                id="apply-button",
+                                color="primary",
+                                className="me-1",
+                            ),
+                        ],
+                        width=2,
+                        className="bg-light p-3",
+                    ),
+                    dbc.Col(
+                        html.Div("Molecular View Content"),
+                        width=10,
+                    ),
+                ]
+            )
 
     # This callback returns two outputs:
     # 1. The table (or an empty Div if the molecular view is selected)
@@ -173,7 +245,7 @@ def create_dashapp(server):
 
         # Define column widths for each table
         column_widths = {
-            "drugs": {"drug_id": "150px", "drug_title": "400px", "smiles": "1600px"},
+            "drugs": {"drug_id": "150px", "drug_title": "300px", "smiles": "1000px"},
             "molecules": {
                 "drug_id": "150px",
                 "drug_title": "150px",
@@ -181,7 +253,7 @@ def create_dashapp(server):
                 "som_element": "150px",
                 "som_level": "150px",
             },
-            "references": {"drug_id": "150px", "reference": "800px", "doi": "1200px"},
+            "references": {"drug_id": "150px", "reference": "500px", "doi": "1000px"},
         }
         widths = column_widths.get(table_chosen, {})
 
@@ -205,7 +277,6 @@ def create_dashapp(server):
                     for i in data[0].keys()
                     if i != "id"
                 ]
-                # Also remove the "id" key from each row
                 data = [{k: v for k, v in row.items() if k != "id"} for row in data]
             else:
                 columns = [
@@ -223,6 +294,7 @@ def create_dashapp(server):
                 "textAlign": "left",
                 "fontFamily": "Roboto, sans-serif",
                 "fontSize": "14px",
+                "color": "#343a40",
             },
             style_data_conditional=[
                 {
@@ -238,10 +310,12 @@ def create_dashapp(server):
                 "fontWeight": "bold",
                 "fontFamily": "Roboto, sans-serif",
                 "fontSize": "16px",
+                "color": "#343a40",
             },
             page_size=items_per_page,
             page_current=0,
             page_action="native",
+            cell_selectable=False,
         )
 
         return table, selected_molecule
