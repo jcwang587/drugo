@@ -1,9 +1,9 @@
 import dash_bootstrap_components as dbc
 from dash import dash_table
+from dash import Dash, html, dcc, Input, Output, callback_context
 
 from .server import db
 from .models import Drugs, Molecules, References
-from dash import Dash, html, dcc, Input, Output
 
 
 def create_dashapp(server):
@@ -13,11 +13,9 @@ def create_dashapp(server):
     with app.server.app_context():
         drug_options = [
             {
-                "label": (
-                    (drug.drug_title[:20] + "...")
-                    if len(drug.drug_title) > 20
-                    else drug.drug_title
-                ),
+                "label": (drug.drug_title[:20] + "...")
+                if len(drug.drug_title) > 20
+                else drug.drug_title,
                 "value": drug.drug_id,
                 "title": drug.drug_title,
             }
@@ -98,38 +96,44 @@ def create_dashapp(server):
         fluid=True,
     )
 
+    # This callback returns two outputs:
+    # 1. The table (or an empty Div if the molecular view is selected)
+    # 2. The value of the molecular view dropdown
+    # When the user clicks on the radio buttons, we clear the molecular view selection,
+    # which causes the table to be shown again.
     @app.callback(
-        Output(component_id="first-graph", component_property="children"),
-        Input(component_id="controls", component_property="value"),
-        Input(component_id="items-per-page-dropdown", component_property="value"),
-        Input(component_id="dropdown", component_property="value"),
+        Output("first-graph", "children"),
+        Output("dropdown", "value"),
+        Input("controls", "value"),
+        Input("items-per-page-dropdown", "value"),
+        Input("dropdown", "value"),
     )
-    
     def update_table(table_chosen, items_per_page, selected_molecule):
-        # Check if a molecule is selected and the table chosen is not "molecules"
+        # Determine which input triggered the callback.
+        ctx = callback_context
+        triggered_id = (
+            ctx.triggered[0]["prop_id"].split(".")[0] if ctx.triggered else None
+        )
+
+        # If the radio buttons were clicked, then reset the molecular view dropdown.
+        if triggered_id == "controls":
+            selected_molecule = None
+
+        # If a molecule has been chosen (and not reset via the radio buttons),
+        # then hide the table.
         if selected_molecule is not None:
-            if table_chosen == "drugs":
-                pass
-            elif table_chosen == "molecules":
-                pass
-            elif table_chosen == "references":
-                pass
-            else:
-                return html.Div()
+            return html.Div(), selected_molecule
 
-        # Map the chosen value to the actual model class
+        # Map the chosen table name to its model
         table_map = {"drugs": Drugs, "molecules": Molecules, "references": References}
-
-        # Get the model class based on the chosen table
         model_class = table_map.get(table_chosen)
-
         if model_class is None:
-            return html.Div("No data available")
+            return html.Div("No data available"), selected_molecule
 
-        # Query the selected table
+        # Query the database for all entries in the chosen table.
         query = db.session.query(model_class).all()
 
-        # Convert query results to a list of dictionaries
+        # Convert the query results to a list of dictionaries.
         data = [
             {
                 column.name: getattr(row, column.name)
@@ -138,7 +142,7 @@ def create_dashapp(server):
             for row in query
         ]
 
-        # Define column widths for each table
+        # Define column widths for each table.
         column_widths = {
             "drugs": {"drug_id": "150px", "drug_title": "400px", "smiles": "1600px"},
             "molecules": {
@@ -150,11 +154,9 @@ def create_dashapp(server):
             },
             "references": {"drug_id": "150px", "reference": "800px", "doi": "1200px"},
         }
-
-        # Get the column widths for the selected table
         widths = column_widths.get(table_chosen, {})
 
-        # Create a Dash DataTable with sorting enabled
+        # Define human-friendly column names.
         column_names = {
             "drug_id": "drug id",
             "drug_title": "drug title",
@@ -166,14 +168,14 @@ def create_dashapp(server):
             "doi": "doi",
         }
 
+        # Create the Dash DataTable. (If there is no data, we provide empty lists.)
+        columns = (
+            [{"name": column_names.get(i, i), "id": i} for i in data[0].keys()]
+            if data
+            else []
+        )
         table = dash_table.DataTable(
-            columns=[
-                {
-                    "name": column_names.get(i, i),
-                    "id": i,
-                }
-                for i in data[0].keys()
-            ],
+            columns=columns,
             data=data,
             sort_action="native",
             style_table={"overflowX": "hidden"},
@@ -196,6 +198,6 @@ def create_dashapp(server):
             page_action="native",
         )
 
-        return table
+        return table, selected_molecule
 
     return app
