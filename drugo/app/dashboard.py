@@ -7,7 +7,6 @@ from .models import Drugs, Molecules, References
 
 
 def create_dashapp(server):
-    # Initialize the app with a dark Bootstrap theme
     app = Dash(
         __name__,
         server=server,
@@ -146,7 +145,7 @@ def create_dashapp(server):
                                 style={
                                     "fontFamily": "Roboto, sans-serif",
                                     "fontSize": "14px",
-                                    "color": "#343a40",  # Darker font color for dropdown text
+                                    "color": "#343a40",
                                 },
                             ),
                             html.Br(),
@@ -231,7 +230,7 @@ def create_dashapp(server):
 
         table_map = {"drugs": Drugs, "molecules": Molecules, "references": References}
         model_class = table_map.get(table_chosen)
-        
+
         if model_class is None:
             return html.Div("No data available"), selected_molecule
 
