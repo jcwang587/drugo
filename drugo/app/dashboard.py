@@ -109,31 +109,25 @@ def create_dashapp(server):
         Input("dropdown", "value"),
     )
     def update_table(table_chosen, items_per_page, selected_molecule):
-        # Determine which input triggered the callback.
         ctx = callback_context
         triggered_id = (
             ctx.triggered[0]["prop_id"].split(".")[0] if ctx.triggered else None
         )
 
-        # If the radio buttons were clicked, then reset the molecular view dropdown.
+        # When switching table type, clear the molecular view selection.
         if triggered_id == "controls":
             selected_molecule = None
 
-        # If a molecule has been chosen (and not reset via the radio buttons),
-        # then hide the table.
+        # If a molecule has been chosen, hide the table.
         if selected_molecule is not None:
             return html.Div(), selected_molecule
 
-        # Map the chosen table name to its model
         table_map = {"drugs": Drugs, "molecules": Molecules, "references": References}
         model_class = table_map.get(table_chosen)
         if model_class is None:
             return html.Div("No data available"), selected_molecule
 
-        # Query the database for all entries in the chosen table.
         query = db.session.query(model_class).all()
-
-        # Convert the query results to a list of dictionaries.
         data = [
             {
                 column.name: getattr(row, column.name)
@@ -156,7 +150,7 @@ def create_dashapp(server):
         }
         widths = column_widths.get(table_chosen, {})
 
-        # Define human-friendly column names.
+        # Define friendly column names.
         column_names = {
             "drug_id": "drug id",
             "drug_title": "drug title",
@@ -168,12 +162,22 @@ def create_dashapp(server):
             "doi": "doi",
         }
 
-        # Create the Dash DataTable. (If there is no data, we provide empty lists.)
-        columns = (
-            [{"name": column_names.get(i, i), "id": i} for i in data[0].keys()]
-            if data
-            else []
-        )
+        # If the table is molecules or references, remove the "id" column.
+        if data:
+            if table_chosen in ("molecules", "references"):
+                columns = [
+                    {"name": column_names.get(i, i), "id": i}
+                    for i in data[0].keys() if i != "id"
+                ]
+                # Also remove the "id" key from each row.
+                data = [{k: v for k, v in row.items() if k != "id"} for row in data]
+            else:
+                columns = [
+                    {"name": column_names.get(i, i), "id": i} for i in data[0].keys()
+                ]
+        else:
+            columns = []
+
         table = dash_table.DataTable(
             columns=columns,
             data=data,
@@ -199,5 +203,3 @@ def create_dashapp(server):
         )
 
         return table, selected_molecule
-
-    return app
