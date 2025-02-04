@@ -8,14 +8,21 @@ from .models import Drugs, Molecules, References
 
 def create_dashapp(server):
     # Initialize the app with a Bootstrap theme
-    app = Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
+    app = Dash(
+        __name__,
+        server=server,
+        external_stylesheets=[dbc.themes.BOOTSTRAP],
+        title="Drug Oxidation Database",
+    )
 
     with app.server.app_context():
         drug_options = [
             {
-                "label": (drug.drug_title[:20] + "...")
-                if len(drug.drug_title) > 20
-                else drug.drug_title,
+                "label": (
+                    (drug.drug_title[:25] + "...")
+                    if len(drug.drug_title) > 25
+                    else drug.drug_title
+                ),
                 "value": drug.drug_id,
                 "title": drug.drug_title,
             }
@@ -28,7 +35,12 @@ def create_dashapp(server):
             html.H1(
                 "Drug Oxidation Database",
                 className="text-center my-3",
-                style={"fontSize": "28px"},
+                style={
+                    "fontSize": "24px",
+                    "fontWeight": "bold",
+                    "color": "#343a40",
+                    "fontFamily": "Roboto, sans-serif",
+                },
             ),
             dbc.Row(
                 [
@@ -37,7 +49,12 @@ def create_dashapp(server):
                             html.H2(
                                 "Tables",
                                 className="text-center",
-                                style={"fontSize": "20px"},
+                                style={
+                                    "fontSize": "20px",
+                                    "fontWeight": "bold",
+                                    "color": "#343a40",
+                                    "fontFamily": "Roboto, sans-serif",
+                                },
                             ),
                             html.Hr(),
                             dcc.RadioItems(
@@ -49,12 +66,17 @@ def create_dashapp(server):
                                 value="drugs",
                                 id="controls",
                                 inline=False,
+                                style={"fontFamily": "Roboto, sans-serif"},
                             ),
                             html.Br(),
                             dbc.Row(
                                 [
                                     dbc.Col(
-                                        html.Label("Items per page:"), width="auto"
+                                        html.Label(
+                                            "Items per page",
+                                            style={"fontFamily": "Roboto, sans-serif"},
+                                        ),
+                                        width="auto",
                                     ),
                                     dbc.Col(
                                         dcc.Dropdown(
@@ -65,6 +87,10 @@ def create_dashapp(server):
                                             ],
                                             value=15,  # Default value
                                             clearable=False,
+                                            style={
+                                                "fontFamily": "Roboto, sans-serif",
+                                                "fontSize": "14px",
+                                            },
                                         ),
                                         width=True,
                                     ),
@@ -76,13 +102,22 @@ def create_dashapp(server):
                             html.H2(
                                 "Molecular View",
                                 className="text-center",
-                                style={"fontSize": "20px"},
+                                style={
+                                    "fontSize": "20px",
+                                    "fontWeight": "bold",
+                                    "color": "#343a40",
+                                    "fontFamily": "Roboto, sans-serif",
+                                },
                             ),
                             html.Hr(),
                             dcc.Dropdown(
                                 id="dropdown",
                                 options=drug_options,
                                 value=None,
+                                style={
+                                    "fontFamily": "Roboto, sans-serif",
+                                    "fontSize": "14px",
+                                },
                             ),
                             html.Br(),
                         ],
@@ -114,11 +149,11 @@ def create_dashapp(server):
             ctx.triggered[0]["prop_id"].split(".")[0] if ctx.triggered else None
         )
 
-        # When switching table type, clear the molecular view selection.
+        # When switching table type, clear the molecular view selection
         if triggered_id == "controls":
             selected_molecule = None
 
-        # If a molecule has been chosen, hide the table.
+        # If a molecule has been chosen, hide the table
         if selected_molecule is not None:
             return html.Div(), selected_molecule
 
@@ -136,7 +171,7 @@ def create_dashapp(server):
             for row in query
         ]
 
-        # Define column widths for each table.
+        # Define column widths for each table
         column_widths = {
             "drugs": {"drug_id": "150px", "drug_title": "400px", "smiles": "1600px"},
             "molecules": {
@@ -150,7 +185,7 @@ def create_dashapp(server):
         }
         widths = column_widths.get(table_chosen, {})
 
-        # Define friendly column names.
+        # Redefine column names
         column_names = {
             "drug_id": "drug id",
             "drug_title": "drug title",
@@ -162,14 +197,15 @@ def create_dashapp(server):
             "doi": "doi",
         }
 
-        # If the table is molecules or references, remove the "id" column.
+        # If the table is molecules or references, remove the "id" column
         if data:
             if table_chosen in ("molecules", "references"):
                 columns = [
                     {"name": column_names.get(i, i), "id": i}
-                    for i in data[0].keys() if i != "id"
+                    for i in data[0].keys()
+                    if i != "id"
                 ]
-                # Also remove the "id" key from each row.
+                # Also remove the "id" key from each row
                 data = [{k: v for k, v in row.items() if k != "id"} for row in data]
             else:
                 columns = [
@@ -183,7 +219,11 @@ def create_dashapp(server):
             data=data,
             sort_action="native",
             style_table={"overflowX": "hidden"},
-            style_cell={"textAlign": "left"},
+            style_cell={
+                "textAlign": "left",
+                "fontFamily": "Roboto, sans-serif",
+                "fontSize": "14px",
+            },
             style_data_conditional=[
                 {
                     "if": {"column_id": column_id},
@@ -196,6 +236,8 @@ def create_dashapp(server):
             style_header={
                 "backgroundColor": "rgb(230, 230, 230)",
                 "fontWeight": "bold",
+                "fontFamily": "Roboto, sans-serif",
+                "fontSize": "16px",
             },
             page_size=items_per_page,
             page_current=0,
