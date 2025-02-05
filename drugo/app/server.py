@@ -1,9 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = "sqlite:///../database/v2025.1/drugo_3a4.db"
+    # Construct the absolute path to the database file
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASE_DIR, '../database/v2025.1/drugo_3a4.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
