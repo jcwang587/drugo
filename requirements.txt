@@ -2,3 +2,4 @@ dash-bootstrap-components
 dash
 Flask
 Flask-SQLAlchemy
+gunicorn
