@@ -33,7 +33,7 @@ def create_dashapp(server):
                         dbc.NavbarBrand("Drug Oxidation Database", className="ms-2"),
                         dbc.Nav(
                             [
-                                dbc.NavItem(dbc.NavLink("Home", href="/home")),
+                                dbc.NavItem(dbc.NavLink("Home", href="https://drugo-a54338d8b0d8.herokuapp.com/")),
                                 dbc.NavItem(dbc.NavLink("GitHub Repo", href="https://github.com/jcwang587/drugo")),
                             ],
                             className="ms-auto",
