@@ -15,8 +15,8 @@ def create_dashapp(server):
     with app.server.app_context():
         drug_options = [
             {
-                "label": (drug.drug_title[:25] + "...")
-                if len(drug.drug_title) > 25
+                "label": (drug.drug_title[:20] + "...")
+                if len(drug.drug_title) > 20
                 else drug.drug_title,
                 "value": drug.drug_id,
                 "title": drug.drug_title,
@@ -33,8 +33,8 @@ def create_dashapp(server):
                         dbc.NavbarBrand("Drug Oxidation Database", className="ms-2"),
                         dbc.Nav(
                             [
-                                dbc.NavItem(dbc.NavLink("Home", href="#")),
-                                dbc.NavItem(dbc.NavLink("About", href="#")),
+                                dbc.NavItem(dbc.NavLink("Home", href="/home")),
+                                dbc.NavItem(dbc.NavLink("GitHub Repo", href="https://github.com/jcwang587/drugo")),
                             ],
                             className="ms-auto",
                         ),
@@ -145,7 +145,7 @@ def create_dashapp(server):
                     dbc.Col(
                         [
                             html.H2(
-                                "Molecular Controls",
+                                "Molecules",
                                 className="text-white",
                                 style={
                                     "fontSize": "16px",
@@ -154,7 +154,7 @@ def create_dashapp(server):
                                 },
                             ),
                             dcc.Dropdown(
-                                id="dropdown",
+                                id="molecule-dropdown",
                                 options=drug_options,
                                 value=None,
                                 style={
