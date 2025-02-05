@@ -203,19 +203,19 @@ def create_dashapp(server):
         ]
 
         # Define column widths for each table.
-        column_widths = {
-            "drugs": {"drug_id": "15%", "drug_title": "30%", "smiles": "55%"},
-            "molecules": {
-                "drug_id": "20%",
-                "drug_title": "20%",
-                "som": "20%",
-                "som_element": "20%",
-                "som_level": "20%",
-            },
-            "references": {"drug_id": "15%", "reference": "40%", "doi": "45%"},
-        }
+        # column_widths = {
+        #     "drugs": {"drug_id": "15%", "drug_title": "30%", "smiles": "55%"},
+        #     "molecules": {
+        #         "drug_id": "20%",
+        #         "drug_title": "20%",
+        #         "som": "20%",
+        #         "som_element": "20%",
+        #         "som_level": "20%",
+        #     },
+        #     "references": {"drug_id": "15%", "reference": "40%", "doi": "45%"},
+        # }
 
-        widths = column_widths.get(table_chosen, {})
+        # widths = column_widths.get(table_chosen, {})
 
         column_names = {
             "drug_id": "drug id",
@@ -259,8 +259,9 @@ def create_dashapp(server):
                 "padding": "5px",
                 "overflow": "hidden",
                 "textOverflow": "ellipsis",
-                "maxWidth": "100%",
-                "wordBreak": "break-word",
+                "maxWidth": 0,
+                # "maxWidth": "100%",
+                # "wordBreak": "break-word",
             },
             # Header: dark background with white text
             style_header={
@@ -270,15 +271,15 @@ def create_dashapp(server):
                 "fontSize": "16px",
                 "color": "white",
             },
-            style_data_conditional=[
-                {
-                    "if": {"column_id": col},
-                    "minWidth": width,
-                    "maxWidth": width,
-                    "width": width,
-                }
-                for col, width in widths.items()
-            ],
+            # style_data_conditional=[
+            #     {
+            #         "if": {"column_id": col},
+            #         "minWidth": width,
+            #         "maxWidth": width,
+            #         "width": width,
+            #     }
+            #     for col, width in widths.items()
+            # ],
             page_size=items_per_page,
             page_current=0,
             page_action="native",
