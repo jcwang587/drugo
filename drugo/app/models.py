@@ -14,7 +14,6 @@ class Drugs(db.Model):
 
 class Molecules(db.Model):
     __tablename__ = "molecules"
-    # Add a new primary key column
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # drug_id is now a foreign key, and not the primary key
     drug_id = db.Column(db.String, db.ForeignKey("drugs.drug_id"), nullable=False)
@@ -25,7 +24,6 @@ class Molecules(db.Model):
 
 class References(db.Model):
     __tablename__ = "references"
-    # Add a new primary key column
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # drug_id is now a foreign key, and not the primary key
     drug_id = db.Column(db.String, db.ForeignKey("drugs.drug_id"), nullable=False)

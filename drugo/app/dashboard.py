@@ -4,6 +4,7 @@ from dash import Dash, html, dcc, Input, Output
 from .server import db
 from .models import Drugs, Molecules, References
 
+
 def create_dashapp(server):
     app = Dash(
         __name__,
@@ -15,9 +16,11 @@ def create_dashapp(server):
     with app.server.app_context():
         drug_options = [
             {
-                "label": (drug.drug_title[:20] + "...")
-                if len(drug.drug_title) > 20
-                else drug.drug_title,
+                "label": (
+                    (drug.drug_title[:20] + "...")
+                    if len(drug.drug_title) > 20
+                    else drug.drug_title
+                ),
                 "value": drug.drug_id,
                 "title": drug.drug_title,
             }
@@ -33,8 +36,18 @@ def create_dashapp(server):
                         dbc.NavbarBrand("Drug Oxidation Database", className="ms-2"),
                         dbc.Nav(
                             [
-                                dbc.NavItem(dbc.NavLink("Home", href="https://drugo-a54338d8b0d8.herokuapp.com/")),
-                                dbc.NavItem(dbc.NavLink("GitHub Repo", href="https://github.com/jcwang587/drugo")),
+                                dbc.NavItem(
+                                    dbc.NavLink(
+                                        "Home",
+                                        href="https://drugo-a54338d8b0d8.herokuapp.com/",
+                                    )
+                                ),
+                                dbc.NavItem(
+                                    dbc.NavLink(
+                                        "GitHub Repo",
+                                        href="https://github.com/jcwang587/drugo",
+                                    )
+                                ),
                             ],
                             className="ms-auto",
                         ),
@@ -51,7 +64,9 @@ def create_dashapp(server):
                             dbc.Tabs(
                                 [
                                     dbc.Tab(label="Tables", tab_id="tab-tables"),
-                                    dbc.Tab(label="Molecular View", tab_id="tab-molecular"),
+                                    dbc.Tab(
+                                        label="Molecular View", tab_id="tab-molecular"
+                                    ),
                                 ],
                                 id="tabs",
                                 active_tab="tab-tables",
@@ -94,7 +109,10 @@ def create_dashapp(server):
                                 value="drugs",
                                 id="controls",
                                 inline=False,
-                                style={"fontFamily": "Roboto, sans-serif", "color": "white"},
+                                style={
+                                    "fontFamily": "Roboto, sans-serif",
+                                    "color": "white",
+                                },
                             ),
                             html.Br(),
                             dbc.Row(
@@ -134,7 +152,7 @@ def create_dashapp(server):
                             html.Br(),
                         ],
                         width=2,
-                        className="bg-dark p-3",  # Use dark background for control panel
+                        className="bg-dark p-3",
                     ),
                     dbc.Col([html.Div(id="first-graph")], width=10),
                 ]
@@ -172,7 +190,7 @@ def create_dashapp(server):
                             ),
                         ],
                         width=2,
-                        className="bg-dark p-3",  # Dark control panel here, too
+                        className="bg-dark p-3",
                     ),
                     dbc.Col(
                         html.Div("Molecular View Content", className="text-white"),
@@ -232,11 +250,14 @@ def create_dashapp(server):
             if table_chosen in ("molecules", "references"):
                 columns = [
                     {"name": column_names.get(i, i), "id": i}
-                    for i in data[0].keys() if i != "id"
+                    for i in data[0].keys()
+                    if i != "id"
                 ]
                 data = [{k: v for k, v in row.items() if k != "id"} for row in data]
             else:
-                columns = [{"name": column_names.get(i, i), "id": i} for i in data[0].keys()]
+                columns = [
+                    {"name": column_names.get(i, i), "id": i} for i in data[0].keys()
+                ]
         else:
             columns = []
 
