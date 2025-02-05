@@ -5,7 +5,7 @@ from .server import db
 from .models import Drugs, Molecules, References
 
 
-def create_dashapp(server):
+def create_dashapp(server, db_version):
     app = Dash(
         __name__,
         server=server,
@@ -27,13 +27,25 @@ def create_dashapp(server):
             for drug in db.session.query(Drugs).all()
         ]
 
-    # App layout with two tabs: Tables and Molecular View.
+    # App layout with tabs: Tables, Molecular View, Resources.
     app.layout = dbc.Container(
         [
             dbc.Navbar(
                 dbc.Container(
                     [
-                        dbc.NavbarBrand("Drug Oxidation Database", className="ms-2"),
+                        dbc.NavbarBrand(
+                            [
+                                "Drug Oxidation Database ",
+                                html.Span(
+                                    db_version,
+                                    style={
+                                        "fontSize": "14px",
+                                        "color": "lightgrey",
+                                    },
+                                ),
+                            ],
+                            className="ms-2"
+                        ),
                         dbc.Nav(
                             [
                                 dbc.NavItem(
@@ -67,6 +79,7 @@ def create_dashapp(server):
                                     dbc.Tab(
                                         label="Molecular View", tab_id="tab-molecular"
                                     ),
+                                    dbc.Tab(label="Resources", tab_id="tab-resources"),
                                 ],
                                 id="tabs",
                                 active_tab="tab-tables",
@@ -103,7 +116,7 @@ def create_dashapp(server):
                             dcc.RadioItems(
                                 options=[
                                     {"label": " Drugs", "value": "drugs"},
-                                    {"label": " Molecules", "value": "molecules"},
+                                    {"label": " Sites of Metabolism", "value": "molecules"},
                                     {"label": " References", "value": "references"},
                                 ],
                                 value="drugs",

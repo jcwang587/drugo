@@ -20,7 +20,10 @@ def create_app():
     server.config.from_object(Config)
     db.init_app(server)
 
+    db_uri = Config.SQLALCHEMY_DATABASE_URI
+    db_version = db_uri.split("/")[-2]
+
     from .dashboard import create_dashapp
 
-    dash_app = create_dashapp(server)
+    dash_app = create_dashapp(server, db_version)
     return server
