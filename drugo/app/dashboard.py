@@ -56,7 +56,7 @@ def create_dashapp(server, db_version):
                                 ),
                                 dbc.NavItem(
                                     dbc.NavLink(
-                                        "GitHub Repo",
+                                        "GitHub Repository",
                                         href="https://github.com/jcwang587/drugo",
                                     )
                                 ),
