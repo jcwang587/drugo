@@ -232,16 +232,6 @@ def create_dashapp(server, db_version):
         if not selected_molecule:
             return "Molecule not found."
 
-        # Create an SVG with the molecule's name
-        # svg_content = f"""
-        # <svg width="200" height="100" xmlns="http://www.w3.org/2000/svg">
-        #     <rect width="100%" height="100%" fill="lightgrey" />
-        #     <text x="10" y="50" font-family="Roboto, sans-serif" font-size="20" fill="black">
-        #         {selected_molecule.drug_title}
-        #     </text>
-        # </svg>
-        # """
-
         png_content = draw_molecule(selected_molecule.smiles)
 
         return html.Div(
