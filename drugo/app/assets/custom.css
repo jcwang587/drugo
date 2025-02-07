@@ -1,0 +1,8 @@
+/* Remove default margins from <p> elements inside dash tables and enforce ellipsis */
+.dash-table-container p {
+    margin: 0;
+    line-height: 1.2;  /* Adjust if needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

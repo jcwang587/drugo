@@ -233,7 +233,6 @@ def create_dashapp(server, db_version):
             for row in query
         ]
 
-
         column_names = {
             "drug_id": "drug id",
             "drug_title": "drug title",
@@ -247,11 +246,23 @@ def create_dashapp(server, db_version):
 
         if data:
             if table_chosen in ("molecules", "references"):
-                columns = [
-                    {"name": column_names.get(i, i), "id": i}
-                    for i in data[0].keys()
-                    if i != "id"
-                ]
+                if table_chosen == "references":
+                    for row in data:
+                        doi_value = row.get("doi")
+                        if doi_value:
+                            # Convert the DOI value (full URL) into a clickable Markdown link.
+                            row["doi"] = f"[{doi_value}]({doi_value})"
+                # Build the columns while skipping the internal "id" column.
+                columns = []
+                for key in data[0].keys():
+                    if key == "id":
+                        continue
+                    col = {"name": column_names.get(key, key), "id": key}
+                    # Specify Markdown presentation for the DOI column.
+                    if table_chosen == "references" and key == "doi":
+                        col["presentation"] = "markdown"
+                    columns.append(col)
+                # Remove the "id" key from each row.
                 data = [{k: v for k, v in row.items() if k != "id"} for row in data]
             else:
                 columns = [
@@ -269,7 +280,7 @@ def create_dashapp(server, db_version):
                 "tableLayout": "fixed",
                 "width": "100%",
             },
-            # Data cells: light background and dark text
+            # Data cells: light background and dark text.
             style_cell={
                 "textAlign": "left",
                 "fontFamily": "Roboto, sans-serif",
@@ -281,7 +292,7 @@ def create_dashapp(server, db_version):
                 "textOverflow": "ellipsis",
                 "maxWidth": 0,
             },
-            # Header: dark background with white text
+            # Header: dark background with white text.
             style_header={
                 "backgroundColor": "#343a40",
                 "fontWeight": "bold",
@@ -296,5 +307,6 @@ def create_dashapp(server, db_version):
         )
 
         return table
+
 
     return app
