@@ -6,3 +6,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Apply text overflow styling to dropdown menu items */
+.dash-dropdown .Select-menu {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

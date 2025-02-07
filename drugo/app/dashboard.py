@@ -3,7 +3,7 @@ from dash import dash_table
 from dash import Dash, html, dcc, Input, Output
 from .server import db
 from .models import Drugs, Molecules, References
-from .chem import draw_molecule
+from .chem import draw_smiles
 
 
 def create_dashapp(server, db_version):
@@ -17,11 +17,7 @@ def create_dashapp(server, db_version):
     with app.server.app_context():
         drug_options = [
             {
-                "label": (
-                    (drug.drug_title[:20] + "...")
-                    if len(drug.drug_title) > 20
-                    else drug.drug_title
-                ),
+                "label": (drug.drug_title),
                 "value": drug.drug_id,
                 "title": drug.drug_title,
             }
@@ -53,6 +49,12 @@ def create_dashapp(server, db_version):
                                     dbc.NavLink(
                                         "Home",
                                         href="https://drugo-a54338d8b0d8.herokuapp.com/",
+                                    )
+                                ),
+                                dbc.NavItem(
+                                    dbc.NavLink(
+                                        "Download",
+                                        href="https://github.com/jcwang587/drugo/releases/tag/v2025.1",
                                     )
                                 ),
                                 dbc.NavItem(
@@ -223,7 +225,7 @@ def create_dashapp(server, db_version):
     )
     def update_molecular_svg(selected_molecule_id):
         if selected_molecule_id is None:
-            return "Select a molecule to view its details."
+            return "Select a molecule to view its 2D structure."
 
         # Fetch the selected molecule's name from the database
         selected_molecule = (
@@ -232,7 +234,7 @@ def create_dashapp(server, db_version):
         if not selected_molecule:
             return "Molecule not found."
 
-        png_content = draw_molecule(selected_molecule.smiles)
+        png_content = draw_smiles(selected_molecule.smiles)
 
         return html.Div(
             html.Img(
