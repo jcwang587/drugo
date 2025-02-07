@@ -3,6 +3,7 @@ from dash import dash_table
 from dash import Dash, html, dcc, Input, Output
 from .server import db
 from .models import Drugs, Molecules, References
+from .chem import draw_molecule
 
 
 def create_dashapp(server, db_version):
@@ -44,7 +45,7 @@ def create_dashapp(server, db_version):
                                     },
                                 ),
                             ],
-                            className="ms-2"
+                            className="ms-2",
                         ),
                         dbc.Nav(
                             [
@@ -116,7 +117,10 @@ def create_dashapp(server, db_version):
                             dcc.RadioItems(
                                 options=[
                                     {"label": " Drugs", "value": "drugs"},
-                                    {"label": " Sites of Metabolism", "value": "molecules"},
+                                    {
+                                        "label": " Sites of Metabolism",
+                                        "value": "molecules",
+                                    },
                                     {"label": " References", "value": "references"},
                                 ],
                                 value="drugs",
@@ -206,11 +210,43 @@ def create_dashapp(server, db_version):
                         className="bg-dark p-3",
                     ),
                     dbc.Col(
-                        html.Div("Molecular View Content", className="text-white"),
+                        html.Div(id="molecular-svg", className="text-white"),
                         width=10,
                     ),
                 ]
             )
+
+    @app.callback(
+        Output("molecular-svg", "children"),
+        Input("molecule-dropdown", "value"),
+    )
+    def update_molecular_svg(selected_molecule_id):
+        if selected_molecule_id is None:
+            return "Select a molecule to view its details."
+
+        # Fetch the selected molecule's name from the database
+        selected_molecule = (
+            db.session.query(Drugs).filter_by(drug_id=selected_molecule_id).first()
+        )
+        if not selected_molecule:
+            return "Molecule not found."
+
+        # Create an SVG with the molecule's name
+        svg_content = f"""
+        <svg width="200" height="100" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="lightgrey" />
+            <text x="10" y="50" font-family="Roboto, sans-serif" font-size="20" fill="black">
+                {selected_molecule.drug_title}
+            </text>
+        </svg>
+        """
+
+        return html.Div(
+            html.Iframe(
+                srcDoc=svg_content,
+                style={"border": "none", "width": "100%", "height": "100px"},
+            )
+        )
 
     @app.callback(
         Output("first-graph", "children"),
@@ -307,6 +343,5 @@ def create_dashapp(server, db_version):
         )
 
         return table
-
 
     return app
