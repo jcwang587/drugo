@@ -1,6 +1,7 @@
 # drugo
 
 [![Powered by SQLAlchemy](https://img.shields.io/badge/powered%20by-SQLAlchemy-red.svg)](https://github.com/sqlalchemy/sqlalchemy)
+[![Powered by Zotero](https://img.shields.io/badge/powered%20by-Zotero-red.svg)](https://github.com/zotero/zotero)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
