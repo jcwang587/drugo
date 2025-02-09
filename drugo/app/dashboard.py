@@ -233,8 +233,18 @@ def create_dashapp(server, db_version):
         )
         if not selected_molecule:
             return "Molecule not found."
+        
+        # Query the Molecules table for all SOM records associated with the selected drug
+        som_records = (
+            db.session.query(Molecules)
+            .filter_by(drug_id=selected_molecule_id)
+            .all()
+        )
 
-        png_content = draw_smiles(selected_molecule.smiles)
+        # Extract the 'som' attribute from each record into a list
+        som_list = [record.som for record in som_records if record.som is not None]
+
+        png_content = draw_smiles(selected_molecule.smiles, som_list)
 
         return html.Div(
             html.Img(
