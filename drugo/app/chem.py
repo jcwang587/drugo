@@ -111,16 +111,19 @@ def draw_smiles(smiles, som_list):
 
     # Rotate if the height is substantially larger than the width
     if height > width:
-        png_content, width, height = draw_molecule_size(smiles, size=size, rotate=True, highlight_atoms=som_list)
+        rotate_flag = True
+        png_content, width, height = draw_molecule_size(smiles, 1000, rotate=rotate_flag, highlight_atoms=som_list)
+    else:
+        rotate_flag = False
 
     # Adjust the size if the molecule is wide (and many atoms are present)
     if num_atoms > 50 and width > 1.3 * height:
-        png_content, width, height = draw_molecule_size(smiles, 1000, rotate=False, highlight_atoms=som_list)
+        png_content, width, height = draw_molecule_size(smiles, 1000, rotate=rotate_flag, highlight_atoms=som_list)
     elif num_atoms > 40 and width > 1.3 * height:
-        png_content, width, height = draw_molecule_size(smiles, 900, rotate=False, highlight_atoms=som_list)
+        png_content, width, height = draw_molecule_size(smiles, 900, rotate=rotate_flag, highlight_atoms=som_list)
     elif num_atoms > 30 and width > 1.3 * height:
-        png_content, width, height = draw_molecule_size(smiles, 800, rotate=False, highlight_atoms=som_list)
+        png_content, width, height = draw_molecule_size(smiles, 800, rotate=rotate_flag, highlight_atoms=som_list)
     elif num_atoms > 20 and width > 1.3 * height:
-        png_content, width, height = draw_molecule_size(smiles, 700, rotate=False, highlight_atoms=som_list)
+        png_content, width, height = draw_molecule_size(smiles, 700, rotate=rotate_flag, highlight_atoms=som_list)
 
     return png_content
