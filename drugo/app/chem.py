@@ -112,7 +112,7 @@ def draw_smiles(smiles, som_list):
     # Rotate if the height is substantially larger than the width
     if height > width:
         rotate_flag = True
-        png_content, width, height = draw_molecule_size(smiles, 1000, rotate=rotate_flag, highlight_atoms=som_list)
+        png_content, width, height = draw_molecule_size(smiles, size, rotate=rotate_flag, highlight_atoms=som_list)
     else:
         rotate_flag = False
 
