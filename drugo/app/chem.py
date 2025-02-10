@@ -42,10 +42,7 @@ def draw_molecule_size(smiles, size=1000, rotate=False, highlight_atoms=None):
     opts.maxFontSize = 30
     opts.clearBackground = False
 
-    # If atoms are to be highlighted, define a light blue color.
-    # The color tuple values must be in the 0-1 range.
     if highlight_atoms is not None:
-        # Light blue color (e.g. RGB: 173, 216, 230 normalized to 0-1)
         light_blue = (173/255, 216/255, 230/255)
         highlight_atom_colors = {atom: light_blue for atom in highlight_atoms}
     else:
@@ -107,6 +104,7 @@ def draw_smiles(smiles, som_list):
         size = min(600, num_atoms * 25)
     else:
         size = min(500, num_atoms * 25)
+    size = max(size, 250)
 
     # Initial drawing with the given size and highlights
     png_content, width, height = draw_molecule_size(smiles, size, rotate=False, highlight_atoms=som_list)
