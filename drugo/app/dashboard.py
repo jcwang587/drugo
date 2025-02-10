@@ -54,7 +54,7 @@ def create_dashapp(server, db_version):
                                 dbc.NavItem(
                                     dbc.NavLink(
                                         "Download",
-                                        href="https://github.com/jcwang587/drugo/releases/tag/v2025.1",
+                                        href="https://github.com/jcwang587/drugo/releases/latest",
                                     )
                                 ),
                                 dbc.NavItem(
