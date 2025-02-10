@@ -102,8 +102,10 @@ def draw_smiles(smiles, som_list):
         size = min(700, num_atoms * 25)
     elif num_atoms > 20:
         size = min(600, num_atoms * 25)
+    elif num_atoms > 10:
+        size = min(500, num_atoms * 30)
     else:
-        size = min(500, num_atoms * 25)
+        size = min(400, num_atoms * 30)
     size = max(size, 300)
 
     # Initial drawing with the given size and highlights
@@ -125,5 +127,7 @@ def draw_smiles(smiles, som_list):
         png_content, width, height = draw_molecule_size(smiles, 800, rotate=rotate_flag, highlight_atoms=som_list)
     elif num_atoms > 20 and width > 1.3 * height:
         png_content, width, height = draw_molecule_size(smiles, 700, rotate=rotate_flag, highlight_atoms=som_list)
+    elif num_atoms > 10 and width > 1.3 * height:
+        png_content, width, height = draw_molecule_size(smiles, 600, rotate=rotate_flag, highlight_atoms=som_list)
 
     return png_content
