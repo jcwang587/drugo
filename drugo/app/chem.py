@@ -104,13 +104,13 @@ def draw_smiles(smiles, som_list):
         size = min(600, num_atoms * 25)
     else:
         size = min(500, num_atoms * 25)
-    size = max(size, 250)
+    size = max(size, 300)
 
     # Initial drawing with the given size and highlights
     png_content, width, height = draw_molecule_size(smiles, size, rotate=False, highlight_atoms=som_list)
 
     # Rotate if the height is substantially larger than the width
-    if height > 1.1 * width:
+    if height > width:
         png_content, width, height = draw_molecule_size(smiles, size=size, rotate=True, highlight_atoms=som_list)
 
     # Adjust the size if the molecule is wide (and many atoms are present)
