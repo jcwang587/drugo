@@ -105,7 +105,7 @@ def draw_smiles(smiles, som_list):
     elif num_atoms > 10:
         size = min(600, num_atoms * 40)
     else:
-        size = min(500, num_atoms * 40)
+        size = min(500, num_atoms * 60)
     size = max(size, 300)
 
     # Initial drawing with the given size and highlights
