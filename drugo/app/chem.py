@@ -95,17 +95,17 @@ def draw_smiles(smiles, som_list):
     num_atoms = mol_draw.GetNumHeavyAtoms()
 
     if num_atoms > 50:
-        size = min(900, num_atoms * 25)
+        size = min(1000, num_atoms * 18)
     elif num_atoms > 40:
-        size = min(800, num_atoms * 25)
+        size = min(900, num_atoms * 20)
     elif num_atoms > 30:
-        size = min(700, num_atoms * 25)
+        size = min(800, num_atoms * 23)
     elif num_atoms > 20:
-        size = min(600, num_atoms * 25)
+        size = min(700, num_atoms * 25)
     elif num_atoms > 10:
-        size = min(500, num_atoms * 30)
+        size = min(600, num_atoms * 40)
     else:
-        size = min(400, num_atoms * 30)
+        size = min(500, num_atoms * 40)
     size = max(size, 300)
 
     # Initial drawing with the given size and highlights
@@ -119,7 +119,7 @@ def draw_smiles(smiles, som_list):
         rotate_flag = False
 
     # Adjust the size if the molecule is wide (and many atoms are present)
-    if width > 1.3 * height:
+    if width > 1.5 * height:
         if num_atoms > 50:
             png_content, width, height = draw_molecule_size(smiles, 1200, rotate=rotate_flag, highlight_atoms=som_list)
         elif num_atoms > 40:
@@ -130,27 +130,19 @@ def draw_smiles(smiles, som_list):
             png_content, width, height = draw_molecule_size(smiles, 900, rotate=rotate_flag, highlight_atoms=som_list)
         elif num_atoms > 10:
             png_content, width, height = draw_molecule_size(smiles, 800, rotate=rotate_flag, highlight_atoms=som_list)
-    elif width > 1.6 * height:
+    elif width > 2 * height:
         if num_atoms > 50:
-            png_content, width, height = draw_molecule_size(smiles, 1500, rotate=rotate_flag, highlight_atoms=som_list)
-        elif num_atoms > 40:
             png_content, width, height = draw_molecule_size(smiles, 1400, rotate=rotate_flag, highlight_atoms=som_list)
-        elif num_atoms > 30:
+        elif num_atoms > 40:
             png_content, width, height = draw_molecule_size(smiles, 1300, rotate=rotate_flag, highlight_atoms=som_list)
-        elif num_atoms > 20:
-            png_content, width, height = draw_molecule_size(smiles, 1200, rotate=rotate_flag, highlight_atoms=som_list)
-        elif num_atoms > 10:
-            png_content, width, height = draw_molecule_size(smiles, 1100, rotate=rotate_flag, highlight_atoms=som_list)
-    elif width > 1.9 * height:
-        if num_atoms > 50:
-            png_content, width, height = draw_molecule_size(smiles, 1800, rotate=rotate_flag, highlight_atoms=som_list)
-        elif num_atoms > 40:
-            png_content, width, height = draw_molecule_size(smiles, 1700, rotate=rotate_flag, highlight_atoms=som_list)
         elif num_atoms > 30:
-            png_content, width, height = draw_molecule_size(smiles, 1600, rotate=rotate_flag, highlight_atoms=som_list)
+            png_content, width, height = draw_molecule_size(smiles, 1200, rotate=rotate_flag, highlight_atoms=som_list)
         elif num_atoms > 20:
-            png_content, width, height = draw_molecule_size(smiles, 1500, rotate=rotate_flag, highlight_atoms=som_list)
+            png_content, width, height = draw_molecule_size(smiles, 1100, rotate=rotate_flag, highlight_atoms=som_list)
         elif num_atoms > 10:
-            png_content, width, height = draw_molecule_size(smiles, 1400, rotate=rotate_flag, highlight_atoms=som_list)
+            png_content, width, height = draw_molecule_size(smiles, 1000, rotate=rotate_flag, highlight_atoms=som_list)
+
+    print(num_atoms)
+    print(width, height)
 
     return png_content
