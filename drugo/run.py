@@ -14,5 +14,5 @@ def remove_pycache_dirs(path="."):
 # Run the app
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, port=4998)
+    app.run(debug=True, port=4995)
     remove_pycache_dirs("app")
