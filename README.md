@@ -13,3 +13,23 @@
 
 Drugo is a database primarily composed of drug molecules, designed to serve as a benchmark dataset for predicting sites of metabolism. The current goal of this project is to provide a database containing molecular structural information using SMILES strings and structurally assigned literature references. Currently, the priority for the construction of the database is focusing on the CYP450 3A4 substrate database.
 
+## References
+
+If you are using the Drugo database for academic work, please cite the following original papers:
+
+```bibtex
+
+@article{doi:10.1021/ci400518g,
+author = {Zaretzki, Jed and Matlock, Matthew and Swamidass, S. Joshua},
+title = {XenoSite: Accurately Predicting CYP-Mediated Sites of Metabolism with Neural Networks},
+journal = {Journal of Chemical Information and Modeling},
+volume = {53},
+number = {12},
+pages = {3373-3383},
+year = {2013},
+doi = {10.1021/ci400518g},
+note ={PMID: 24224933},
+URL = {https://doi.org/10.1021/ci400518g},
+eprint = {https://doi.org/10.1021/ci400518g}
+}
+```
