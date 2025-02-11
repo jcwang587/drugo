@@ -19,7 +19,7 @@ If you are using the Drugo database for academic work, please cite the following
 
 ```bibtex
 
-@article{doi:10.1021/ci400518g,
+@article{JChemInfModel2013,
 author = {Zaretzki, Jed and Matlock, Matthew and Swamidass, S. Joshua},
 title = {XenoSite: Accurately Predicting CYP-Mediated Sites of Metabolism with Neural Networks},
 journal = {Journal of Chemical Information and Modeling},
