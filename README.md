@@ -27,9 +27,6 @@ volume = {53},
 number = {12},
 pages = {3373-3383},
 year = {2013},
-doi = {10.1021/ci400518g},
-note ={PMID: 24224933},
-URL = {https://doi.org/10.1021/ci400518g},
-eprint = {https://doi.org/10.1021/ci400518g}
+doi = {10.1021/ci400518g}
 }
 ```
