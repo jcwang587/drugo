@@ -1,4 +1,5 @@
 import dash_bootstrap_components as dbc
+import dash_html_components as html
 from dash import dash_table
 from dash import Dash, html, dcc, Input, Output
 from .server import db
@@ -218,7 +219,33 @@ def create_dashapp(server, db_version):
                 ],
                 align="start",
             )
+        elif active_tab == "tab-resources":
+            return dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.H2(
+                                "Molecules",
+                                className="text-white",
+                                style={
+                                    "fontSize": "16px",
+                                    "fontWeight": "bold",
+                                    "fontFamily": "Roboto, sans-serif",
+                                },
+                            ),
+                        ],
+                        width=2,
+                        className="bg-dark p-3",
+                    ),
+                    dbc.Col(
+                        html.Div(id="jsmol-content", className="text-white"),
+                        width=9,
+                    ),
+                ],
+                align="start",
+            )       
 
+            
     @app.callback(
         Output("molecular-svg", "children"),
         Input("molecule-dropdown", "value"),
@@ -350,3 +377,37 @@ def create_dashapp(server, db_version):
         return table
 
     return app
+
+
+    @app.callback(
+        Output("jsmol-content", "children"),
+        Input("tabs", "active_tab"),
+    )
+    def render_content(active_tab):
+        if active_tab == "tab-resources":
+            resources_content = html.Div([
+                html.Meta(charSet='utf-8'),
+                html.H1('Resources'),
+                html.P('This is the Resources tab content.'),
+                html.Div(id="jsmol-container"),  # Container for JSmol applet
+                # Add more HTML components as needed
+            ])
+
+            return html.Div([
+                html.Script(src="JSmol.min.js", type="text/javascript"),
+                resources_content,
+                html.Script("""
+                    var Info = {
+                        color: "#FFFFFF",
+                        height: 300,
+                        width: 300,
+                        script: "load $caffeine",
+                        use: "HTML5",
+                        j2sPath: "j2s",  // Adjust the path to the JSmol j2s directory
+                        serverURL: "php/jsmol.php"
+                    };
+                    Jmol.getApplet("myJmol", Info);
+                    document.getElementById("jsmol-container").innerHTML = Jmol.getAppletHtml("myJmol");
+                """)
+            ])
+        return html.Div()
