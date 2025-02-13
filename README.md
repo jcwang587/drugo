@@ -1,5 +1,7 @@
 # drugo 💊🗄️
 
+[![Release](https://img.shields.io/github/v/release/jcwang587/drugo)](https://github.com/jcwang587/drugo/releases/latest)
+[![Heroku Status](https://img.shields.io/badge/Heroku-5A1BA9?logo=heroku)](https://drugo-a54338d8b0d8.herokuapp.com/)
 [![Powered by SQLAlchemy](https://img.shields.io/badge/powered%20by-SQLAlchemy-CB2222.svg)](https://github.com/sqlalchemy/sqlalchemy)
 [![Powered by Zotero](https://img.shields.io/badge/powered%20by-Zotero-CD2533.svg)](https://github.com/zotero/zotero)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
